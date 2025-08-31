@@ -1,53 +1,53 @@
 // ====================== 1) room ======================
-// 关联：session[*]、roommember[*]; 字段：name/state/capacity/created_at/room_id
+// Relations: session[*], roommember[*]; Fields: name/state/capacity/created_at/room_id
 public class Room {
     // --- US_2.1 Player join/leave; US_2.6 GM team assignment ---
     public boolean isFull(int currentMembers, int capacity) { return false; }
-    public void open(Integer roomId) { }
-    public void close(Integer roomId) { }
-    public void setState(Integer roomId, RoomState state) { }
+    public void open(int roomId) { }
+    public void close(int roomId) { }
+    public void setState(int roomId, RoomState state) { }
 
     // Player joins/leaves the room (creates/deletes a RoomMember)
-    public RoomMember addMember(Integer roomId, Integer userId, OffsetDateTime joinedAt) { return null; }     // US_2.1
-    public void removeMember(Integer roomId, Integer userId) { }                                              // US_2.1
+    public RoomMember addMember(int roomId, int userId, OffsetDateTime joinedAt) { return null; }     // US_2.1
+    public void removeMember(int roomId, int userId) { }                                              // US_2.1
 
     // Teaming (no dedicated table; temporary grouping by room)
-    public Integer createTeam(Integer roomId, String teamName) { return null; }                               // US_2.1
-    public void addMemberToTeam(Integer roomId, Integer teamId, Integer userId) { }                           // US_2.1
-    public void assignTeamsByGM(Integer roomId, Map<Integer, List<Integer>> teamToUserIds) { }                // US_2.6
+    public Integer createTeam(Int roomId, String teamName) { return null; }                               // US_2.1
+    public void addMemberToTeam(int roomId, int teamId, int userId) { }                           // US_2.1
+    public void assignTeamsByGM(int roomId, Map<int, List<int>> teamToUserIds) { }                // US_2.6
 
     // Team consensus actions
-    public String recordTeamAction(Integer roomId, Integer teamId, String actionName, String notes) { return null; } // US_2.5
-    public void confirmTeamAction(Integer roomId, Integer teamId, String proposalId, Integer confirmerUserId) { }     // US_2.5
+    public String recordTeamAction(int roomId, int teamId, String actionName, String notes) { return null; } // US_2.5
+    public void confirmTeamAction(int roomId, int teamId, String proposalId, int confirmerUserId) { }     // US_2.5
 
     // Room invitations & join by code
     // Generate an invitation (returns inviteId) with optional message and expiry
-    public String inviteFriendToRoom(Integer inviterUserId,
-                                     Integer inviteeUserId,
-                                     Integer roomId,
+    public String inviteFriendToRoom(int inviterUserId,
+                                     int inviteeUserId,
+                                     int roomId,
                                      String message,
                                      OffsetDateTime expireAt) { return null; }        // US_2.4
 
     // On accept: invited player joins the room and a corresponding RoomMember is returned
-    public RoomMember acceptRoomInvite(Integer inviteeUserId,
+    public RoomMember acceptRoomInvite(int inviteeUserId,
                                        String inviteId,
                                        OffsetDateTime joinedAt) { return null; }       // US_2.4
 
     // Invitee declines; or inviter/GM revokes
-    public void declineRoomInvite(Integer inviteeUserId, String inviteId) { }          // US_2.4
-    public void revokeRoomInvite(Integer inviterUserId, String inviteId) { }           // US_2.4
+    public void declineRoomInvite(int inviteeUserId, String inviteId) { }          // US_2.4
+    public void revokeRoomInvite(int inviterUserId, String inviteId) { }           // US_2.4
 
     // Admin/GM lists active invites of the room (for UI or audit)
     public List<String> listActiveInvites(Integer roomId) { return null; }             // US_2.4
 
     // === Join via join code/QR (for classroom scanning) ===
     // Generate a temporary join code (the same code may be embedded in a QR)
-    public String generateJoinCode(Integer roomId,
-                                   Integer inviterUserId,
+    public String generateJoinCode(Int roomId,
+                                   int inviterUserId,
                                    Duration ttl) { return null; }                      // US_2.4
 
     // Join a room with a join code (server must validate expiry/capacity)
-    public RoomMember joinRoomByCode(Integer userId,
+    public RoomMember joinRoomByCode(int userId,
                                      String joinCode,
                                      OffsetDateTime joinedAt) { return null; }         // US_2.4
 
@@ -57,50 +57,49 @@ public class Room {
 // Relations: room[1], character[*], combatlog[*], analyticsevent[*]; Fields: status/created_at/session_id
 public class Session {
     // Lifecycle control
-    public void start(Integer sessionId, Integer gmUserId) { }                                                // US_4.1, US_4.7
-    public void pause(Integer sessionId, Integer gmUserId) { }
-    public void resume(Integer sessionId, Integer gmUserId) { }
-    public void finish(Integer sessionId, Integer gmUserId) { }
+    public void start(int sessionId, Int gmUserId) { }                                                // US_4.1, US_4.7
+    public void pause(int sessionId, Int gmUserId) { }
+    public void resume(int sessionId, Int gmUserId) { }
+    public void finish(int sessionId, Int gmUserId) { }
 
     // Turns & timeout
     // End a character's turn in this session.
-    public void endTurn(Integer sessionId, Integer actorCharId) { }                                           // US_1.4
+    public void endTurn(int sessionId, int actorCharId) { }                                           // US_1.4
     // End a turn automatically because of timeout.
-    public void endTurnOnTimeout(Integer sessionId, Integer actorCharId, Duration maxDuration) { }            // US_1.4
+    public void endTurnOnTimeout(int sessionId, int actorCharId, Duration maxDuration) { }            // US_1.4
 
     // Save / Load snapshots
-    public String saveSnapshot(Integer sessionId, Integer gmUserId, String note) { return null; }             // US_4.2
-    public void loadSnapshot(String snapshotId, Integer gmUserId) { }                                         // US_4.3
+    public String saveSnapshot(int sessionId, int gmUserId, String note) { return null; }             // US_4.2
+    public void loadSnapshot(String snapshotId, int gmUserId) { }                                         // US_4.3
 
     // Rules & difficulty
-    public void applyDefaultRules(Integer sessionId) { }                                                       // US_4.7
-    public void setDifficulty(Integer sessionId, String level, Map<String, Object> options) { }               // US_4.8
+    public void applyDefaultRules(int sessionId) { }                                                       // US_4.7
+    public void setDifficulty(int sessionId, String level, Map<String, Object> options) { }               // US_4.8
 
     // Live overview (group progress, whose turn, etc.)
-    public Map<String, Object> getLiveOverview(Integer sessionId) { return null; }                            // US_4.1
-    public Map<Integer, Object> computeGroupProgress(Integer sessionId) { return null; }                      // US_4.1
+    public Map<String, Object> getLiveOverview(integer sessionId) { return null; }                            // US_4.1
+    public Map<Int, Object> computeGroupProgress(int sessionId) { return null; }                      // US_4.1
 }
 
 // ====================== 3) user ======================
 // Relations: roommember[*], character[*], subscription[*], friendship[*]
 public class User {
     // Roles / permissions
-    public boolean hasRole(Integer userId, UserRole role) { return false; }                                   // US_3.x, US_5.5
-    public void changeRole(Integer operatorAdminId, Integer targetUserId, UserRole newRole) { }               // US_5.5
+    public boolean hasRole(int userId, UserRole role) { return false; }                                   // US_3.x, US_5.5
+    public void changeRole(int operatorAdminId, int targetUserId, UserRole newRole) { }               // US_5.5
 
     // Login-related (domain-level validation)
     public boolean checkPassword(String rawPassword, String passwordHash) { return false; }                   // US_3.1-3.3
 
     // Join room & select character
-    public RoomMember joinRoom(Integer userId, Integer roomId, OffsetDateTime joinedAt) { return null; }      // US_2.1
-
+    public RoomMember joinRoom(int userId, int roomId, OffsetDateTime joinedAt) { return null; }      // US_2.1
     //Select or create a character for a session.
-    public Integer selectCharacter(Integer userId, Integer sessionId,
+    public Integer selectCharacter(int userId, int sessionId,
                                    CharacterRole role, String nameOrDescription) { return null; }             // US_1.1
 
     // === From user side: trigger friend operations (delegates to Friendship domain/service) ===
-    public void requestFriend(Integer userId, Integer targetUserId, String message) { }                       // US_2.3
-    public void respondFriendRequest(Integer userId, Integer requesterUserId, boolean accept) { }             // US_2.3
+    public void requestFriend(int userId, integer targetUserId, String message) { }                       // US_2.3
+    public void respondFriendRequest(int userId, int requesterUserId, boolean accept) { }             // US_2.3
 }
 
 // ====================== 4) character ======================
@@ -108,20 +107,20 @@ public class User {
 public class Character {
     // Customize / view state
     // Rename a character's display name.
-    public void rename(Integer charId, String displayName) { }                                                // US_1.1, US_4.6
+    public void rename(int charId, String displayName) { }                                                // US_1.1, US_4.6
     // Set a character's role/class.
-    public void setRole(Integer charId, CharacterRole role) { }                                               // US_1.1, US_4.6
-    public void updateStats(Integer charId, Integer hp, Integer mp, Integer ap, Integer speed) { }            // US_1.6, US_4.6
+    public void setRole(int charId, CharacterRole role) { }                                               // US_1.1, US_4.6
+    // Update character' s status
+    public void updateStats(Int charId, int hp, int mp, int ap, int speed) { }            // US_1.6, US_4.6
     // Get current status of a character.
     public int[] getStates(Integer charId) { return null; }                                                             // US_1.6
 
-
     // Combat actions
     // Perform a combat action from actor to target.
-    public String performAction(Integer sessionId, Integer actorCharId, Integer targetCharId,
+    public String performAction(int sessionId, int actorCharId, int targetCharId,
                                 CombatAction action, int diceCount, int sides, int modifier) { return null; } // US_1.2, US_1.7, US_1.3
     // Assist action
-    public String assistTeammate(Integer sessionId, Integer actorCharId, List<Integer> allyCharId,
+    public String assistTeammate(int sessionId, int actorCharId, int[] allyCharId,
                                  String assistType, int diceCount, int sides, int modifier) { return null; }  // US_1.8
     // Roll a dice
     public int rollDice(int diceCount, int sides, int modifier) { return 0; }                                  // US_1.7
@@ -130,77 +129,77 @@ public class Character {
 // ====================== 5) plan ======================
 // Subscription plans (managed by administrators)
 public class Plan {
-    public Integer create(String name, BigDecimal monthlyCost, Integer maxUsers) { return null; }              // US_5.7
-    public void update(Integer planId, String name, BigDecimal monthlyCost, Integer maxUsers) { }              // US_5.7
-    public BigDecimal estimateMonthlyCost(Integer planId, int usersCount) { return null; }                     // US_5.1
+    public Integer create(String name, BigDecimal monthlyCost, int maxUsers) { return null; }              // US_5.7
+    public void update(int planId, String name, BigDecimal monthlyCost, int maxUsers) { }              // US_5.7
+    public BigDecimal estimateMonthlyCost(int planId, int usersCount) { return null; }                     // US_5.1
 }
 
 // ====================== 6) subscription ======================
 // Relations: user[1], plan[1]; Fields: status/started_at/ended_at
 public class Subscription {
-    public Integer subscribe(Integer userId, Integer planId, OffsetDateTime startAt) { return null; }          // US_5.7
-    public void cancel(Integer subId, OffsetDateTime endAt) { }                                                // US_5.7
-    public void pause(Integer subId) { }                                                                        // US_5.7
-    public boolean isActive(Integer subId, OffsetDateTime at) { return false; }                                 // US_5.1
-    public void changePlan(Integer subId, Integer newPlanId) { }                                                // US_5.7
+    public Integer subscribe(int userId, int planId, OffsetDateTime startAt) { return null; }          // US_5.7
+    public void cancel(int subId, OffsetDateTime endAt) { }                                                // US_5.7
+    public void pause(int subId) { }                                                                        // US_5.7
+    public boolean isActive(int subId, OffsetDateTime at) { return false; }                                 // US_5.1
+    public void changePlan(int subId, int newPlanId) { }                                                // US_5.7
 }
 
 // ====================== 7) roommember ======================
 // Room–User association with joined_at
 public class RoomMember {
-    public static RoomMember of(Integer roomId, Integer userId, OffsetDateTime joinedAt) { return null; }      // US_2.1
-    public void leave(Integer roomId, Integer userId) { }                                                       // US_2.1
-    public boolean isMemberOf(Integer roomId, Integer userId) { return false; }                                 // US_2.1
+    public static RoomMember of(int roomId, int userId, OffsetDateTime joinedAt) { return null; }      // US_2.1
+    public void leave(int roomId, int userId) { }                                                       // US_2.1
+    public boolean isMemberOf(int roomId, int userId) { return false; }                                 // US_2.1
 }
 
 // ====================== 8) friendship ======================
 // User–User social relationship
 public class Friendship {
-    public void sendRequest(Integer userId, Integer targetUserId) { }                                          // 衍生于社交需求
-    public void accept(Integer userId, Integer targetUserId) { }
-    public void block(Integer userId, Integer targetUserId) { }
-    public boolean isBetween(Integer userId, Integer friendId) { return false; }
+    public void sendRequest(Int userId, Int targetUserId) { }                                          // Derived from social requirements
+    public void accept(int userId, int targetUserId) { }
+    public void block(int userId, int targetUserId) { }
+    public boolean isBetween(Int userId, Int friendId) { return false; }
  
     // Friend management (add/accept/decline/remove/list)
     // ===Decline a friend request / cancel a sent request===
-    public void decline(Integer userId, Integer requesterUserId) { }                   // US_2.3
-    public void cancelRequest(Integer requesterUserId, Integer targetUserId) { }       // US_2.3
+    public void decline(int userId, int requesterUserId) { }                   // US_2.3
+    public void cancelRequest(int requesterUserId, int targetUserId) { }       // US_2.3
 
     // === Remove an existing friendship / unblock a user ===
-    public void remove(Integer userId, Integer friendUserId) { }                       // US_2.3
-    public void unblock(Integer userId, Integer blockedUserId) { }                     // US_2.3
+    public void remove(int userId, int friendUserId) { }                       // US_2.3
+    public void unblock(int userId, int blockedUserId) { }                     // US_2.3
 
     // === Queries ===
-    public List<Integer> listFriends(Integer userId) { return null; }                  // US_2.3
-    public List<Integer> listPendingRequests(Integer userId) { return null; }          // US_2.3
-    public FriendshipStatus getStatus(Integer userId, Integer otherUserId) { return null; } // US_2.3
+    public List<Int> listFriends(int userId) { return null; }                  // US_2.3
+    public List<Int> listPendingRequests(int userId) { return null; }          // US_2.3
+    public FriendshipStatus getStatus(int userId, int otherUserId) { return null; } // US_2.3
 }
 
 // ====================== 9) analyticsevent ======================
 // Behavioral/monitoring events for KPIs, audit, and alerts
 public class AnalyticsEvent {
-    public static AnalyticsEvent of(Integer sessionId, Integer userId, AnalyticsEventType type,
+    public static AnalyticsEvent of(int sessionId, int userId, AnalyticsEventType type,
                                     OffsetDateTime timestamp, String metadataJson) { return null; }
 
     // KPI & monitoring
-    public static Map<String, Object> computeKPIs(Integer roomId, Integer sessionId,
+    public static Map<String, Object> computeKPIs(int roomId, int sessionId,
                                                   OffsetDateTime from, OffsetDateTime to) { return null; }    // US_5.2, US_5.3
     public static List<AnalyticsEvent> getAuditLog(OffsetDateTime from, OffsetDateTime to,
                                                    AnalyticsEventType filter) { return null; }                // US_5.5
     public static boolean isAuthError(AnalyticsEvent e) { return false; }                                     // US_5.6
-    public static boolean isLowEngagement(Integer roomId, OffsetDateTime from, OffsetDateTime to,
+    public static boolean isLowEngagement(int roomId, OffsetDateTime from, OffsetDateTime to,
                                           int lowEngagementMinutes, int missedSessions) { return false; }     // US_5.8
 
     // === Record key social/invite actions (optional; useful for dashboard and audit) ===
-    public static void recordFriendEvent(Integer actorUserId,
-                                         Integer targetUserId,
+    public static void recordFriendEvent(int actorUserId,
+                                         int targetUserId,
                                          String action,                                                       // "request"|"accept"|"decline"|"remove"|"block"|"unblock"
                                          OffsetDateTime ts) { }                                               // US_2.3
 
-    public static void recordRoomInviteEvent(Integer actorUserId,
-                                             Integer roomId,
+    public static void recordRoomInviteEvent(int actorUserId,
+                                             int roomId,
                                              String action,                                                   // "invite"|"revoke"|"accept"|"decline"|"joinByCode"
-                                             String refIdOrCode,                                              // inviteId 或 joinCode（用于审计追踪）
+                                             String refIdOrCode,                                              // inviteId or joinCode (for audit trace)
                                              OffsetDateTime ts) { }                                           // US_2.4
    
 }
@@ -209,10 +208,10 @@ public class AnalyticsEvent {
 // Combat log: replay & visual feedback
 public class CombatLog {
     // Create a combat log
-    public static CombatLog create(Integer sessionId, Integer turnIndex, Integer actorCharId,
-                                   CombatAction action, Integer targetCharId, String resultText) { return null; } // US_1.3, US_1.5
+    public static CombatLog create(int sessionId, int turnIndex, int actorCharId,
+                                   CombatAction action, int targetCharId, String resultText) { return null; } // US_1.3, US_1.5
     // List recent combat logs for a session.
-    public static List<CombatLog> listRecent(Integer sessionId, int limit, int offset) { return null; }           // US_1.5
+    public static List<CombatLog> listRecent(int sessionId, int limit, int offset) { return null; }           // US_1.5
     // Format the log entry for UI display.
     public String formatForDisplay() { return null; }                                                              // US_1.3
 }
