@@ -63,7 +63,9 @@ public class Session {
     public void finish(int sessionId, Int gmUserId) { }
 
     // Turns & timeout
+    // End a character's turn in this session.
     public void endTurn(int sessionId, int actorCharId) { }                                           // US_1.4
+    // End a turn automatically because of timeout.
     public void endTurnOnTimeout(int sessionId, int actorCharId, Duration maxDuration) { }            // US_1.4
 
     // Save / Load snapshots
@@ -99,6 +101,7 @@ public class User {
 
     // Join room & select character
     public RoomMember joinRoom(int userId, int roomId, OffsetDateTime joinedAt) { return null; }      // US_2.1
+    //Select or create a character for a session.
     public Integer selectCharacter(int userId, int sessionId,
                                    CharacterRole role, String nameOrDescription) { return null; }             // US_1.1
 
@@ -111,16 +114,23 @@ public class User {
 // Relations: session[1], user[0..1], combatlog[*]
 public class Character {
     // Customize / view state
+    // Rename a character's display name.
     public void rename(int charId, String displayName) { }                                                // US_1.1, US_4.6
+    // Set a character's role/class.
     public void setRole(int charId, CharacterRole role) { }                                               // US_1.1, US_4.6
+    // Update character' s status
     public void updateStats(Int charId, int hp, int mp, int ap, int speed) { }            // US_1.6, US_4.6
-    public int getHp(int charId) { return 0; }                                                             // US_1.6
+    // Get current status of a character.
+    public int[] getStates(Integer charId) { return null; }                                                             // US_1.6
 
     // Combat actions
+    // Perform a combat action from actor to target.
     public String performAction(int sessionId, int actorCharId, int targetCharId,
                                 CombatAction action, int diceCount, int sides, int modifier) { return null; } // US_1.2, US_1.7, US_1.3
-    public String assistTeammate(int sessionId, int actorCharId, int allyCharId,
+    // Assist action
+    public String assistTeammate(int sessionId, int actorCharId, int[] allyCharId,
                                  String assistType, int diceCount, int sides, int modifier) { return null; }  // US_1.8
+    // Roll a dice
     public int rollDice(int diceCount, int sides, int modifier) { return 0; }                                  // US_1.7
 }
 
@@ -205,8 +215,11 @@ public class AnalyticsEvent {
 // ====================== 10) combatlog ======================
 // Combat log: replay & visual feedback
 public class CombatLog {
+    // Create a combat log
     public static CombatLog create(int sessionId, int turnIndex, int actorCharId,
                                    CombatAction action, int targetCharId, String resultText) { return null; } // US_1.3, US_1.5
+    // List recent combat logs for a session.
     public static List<CombatLog> listRecent(int sessionId, int limit, int offset) { return null; }           // US_1.5
+    // Format the log entry for UI display.
     public String formatForDisplay() { return null; }                                                              // US_1.3
 }
