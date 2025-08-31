@@ -1,5 +1,5 @@
 // ====================== 1) room ======================
-// 关联：session[*]、roommember[*]; 字段：name/state/capacity/created_at/room_id
+// Relations: session[*], roommember[*]; Fields: name/state/capacity/created_at/room_id
 public class Room {
     // --- US_2.1 Player join/leave; US_2.6 GM team assignment ---
     public boolean isFull(int currentMembers, int capacity) { return false; }
@@ -145,7 +145,7 @@ public class RoomMember {
 // ====================== 8) friendship ======================
 // User–User social relationship
 public class Friendship {
-    public void sendRequest(Integer userId, Integer targetUserId) { }                                          // 衍生于社交需求
+    public void sendRequest(Integer userId, Integer targetUserId) { }                                          // Derived from social requirements
     public void accept(Integer userId, Integer targetUserId) { }
     public void block(Integer userId, Integer targetUserId) { }
     public boolean isBetween(Integer userId, Integer friendId) { return false; }
@@ -189,7 +189,7 @@ public class AnalyticsEvent {
     public static void recordRoomInviteEvent(Integer actorUserId,
                                              Integer roomId,
                                              String action,                                                   // "invite"|"revoke"|"accept"|"decline"|"joinByCode"
-                                             String refIdOrCode,                                              // inviteId 或 joinCode（用于审计追踪）
+                                             String refIdOrCode,                                              // inviteId or joinCode (for audit trace)
                                              OffsetDateTime ts) { }                                           // US_2.4
    
 }
