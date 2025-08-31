@@ -67,14 +67,22 @@ public class Session {
     public void endTurnOnTimeout(int sessionId, int actorCharId, Duration maxDuration) { }            // US_1.4
 
     // Save / Load snapshots
-    public String saveSnapshot(int sessionId, int gmUserId, String note) { return null; }             // US_4.2
-    public void loadSnapshot(String snapshotId, int gmUserId) { }                                         // US_4.3
+    //Save the current session state during gameplay
+    public String saveSnapshot(int sessionId, int gmUserId, String note) {
+    // TODO: Store dynamic state data (maps, positions, HP, etc.)
+    return null; }             // US_4.2
+       
+        
+    public void loadSnapshot(String snapshotId, int gmUserId) {
+    // TODO: Restore saved state and continue gameplay }                                         // US_4.3
 
-    // Rules & difficulty
+    // Rules & difficulty Automatically have a built-in default rule system
     public void applyDefaultRules(int sessionId) { }                                                       // US_4.7
+    //Allow customization of difficulty and advanced settings
     public void setDifficulty(int sessionId, String level, Map<String, Object> options) { }               // US_4.8
 
-    // Live overview (group progress, whose turn, etc.)
+    // Live overview 
+    //Monitor each group's mission progress and activity in real-time
     public Map<String, Object> getLiveOverview(integer sessionId) { return null; }                            // US_4.1
     public Map<Int, Object> computeGroupProgress(int sessionId) { return null; }                      // US_4.1
 }
