@@ -1,3 +1,5 @@
+Change
+
 // ====================== 1) room ======================
 // 关联：session[*]、roommember[*]; 字段：name/state/capacity/created_at/room_id
 public class Room {
